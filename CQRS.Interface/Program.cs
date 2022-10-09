@@ -1,5 +1,10 @@
-using EFCoreProject.Infrastructure;
+using CQRS.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
+using CQRS.Application.Commands.PersonCommands;
+using CQRS.Domain.IRepositories;
+using CQRS.Infrastructure.Repositories;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 //add database
-builder.Services.AddDbContext<EFCoreDbContext>(option => option.UseSqlServer(builder.Configuration["ConnectionString"]));
+builder.Services.AddDbContext<CqrsDbContext>(option => option.UseSqlServer(builder.Configuration["ConnectionString"]));
+
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
